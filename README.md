@@ -11,7 +11,7 @@ The script todo.py, HamsterWheel's only file :), walks through the directory tre
 unless the folder is called "Materials". If it finds a TODO file, it parses its lines into a list of tasks for this folder. 
 
 ## Usage
-
+```
 usage: todo.py [-h] [-t] [-p] [-m]
 
 Report various TODO list aspects
@@ -21,6 +21,7 @@ optional arguments:
   -t, --tasks        list all tasks
   -p, --projects     list all projects, including empty ones
   -m, --mailsubject  Add a mail subject line
+  ```
   
  ## Trivia
  If you are interested in helping to develop HamsterWheel further, please contact me or just get going and push your improvements. 
