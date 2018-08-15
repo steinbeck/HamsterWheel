@@ -1,8 +1,18 @@
 #!/usr/local/bin/python3
 import os
 import argparse
+import sys
 
-todoDir="/Users/steinbeck/Dropbox/Documents/Projects"
+#
+# Adjust these variables to fit your needs or preferences 
+#
+todoDir="/Users/steinbeck/Dropbox/Documents/Projects"   # the topmost directory where your projects reside
+rootProjectName="Christoph's projects"  # The name of the entirety of your projects. Your topmost superproject, if you wish. Holds all other projects.
+subjectLineTaskList = "Task list for Christoph" # If you mail this list to yourself, this will be the subject line. 
+subjectLineProjectList = "Project list for Christoph" # If you mail this list to yourself, this will be the subject line. 
+indentAtom = 4 # names of subproject are indented by multiples of indentAtom in the project list 
+
+
 exclDirs= list()
 exclDirs.append("ZZ-COMPLETED")
 exclDirs.append("ZZ-WAITINGFOR")
@@ -14,9 +24,11 @@ projectList = list()
 
 class Project:
     
-    def __init__(self, name):
+    def __init__(self, name, path):
         self.name = name
+        self.path = path
         self.tasks = list()
+        self.projects = list()
 
     def addTask(self, task):
         self.tasks.append(task)
@@ -24,56 +36,75 @@ class Project:
     def getTasks(self):
         return self.tasks    
 
+    def setPath(self, path):
+        self.path = path
 
-def scanProjectDirs(todoDir):
+    def getPath(self):
+        return self.path
 
-    for dirname, dirnames, filenames in os.walk(todoDir):
-        # Advanced usage:
-        # editing the 'dirnames' list will stop os.walk() from recursing into there.
+    def addProject(self, project):
+        self.projects.append(project)
+
+    def getProjects(self):
+        return self.projects    
+
+
+def scanProjectDirs(project):
+    projectDir = project.getPath()
+    for root, dirs, files in os.walk(projectDir):
+        #editing the 'dirnames' list will stop os.walk() from recursing into there.
         for exclDir in exclDirs:
-            if exclDir in dirnames:
+            if exclDir in dirs:
                 # don't go into any of those directories.
-                dirnames.remove(exclDir)
+                dirs.remove(exclDir)
                 
-        # Put all directory names in todo_dir in a dictionary as hash keys
-        # Add full pathes as values 
-        for subdirname in dirnames:
-            projects[subdirname] = os.path.join(dirname, subdirname)
+        level = root.replace(projectDir, '').count(os.sep)
+        #print('listing ' + str(len(dirs)) + ' dirs')
+        for dir in dirs:
+            newproject = Project(dir, root + os.sep + dir)
+            project.addProject(newproject)
+            scanProjectDirs(newproject)            
+        #print('done')
+        break
+   
     
-def assembleProjectsTasks(projects):
-    for key in projects:
-        #print(key, projects[key])
-        project = Project(key)
-        for dirname, dirnames, filenames in os.walk(projects[key]):
-            #print(len(filenames))
+def assembleProjectsTasks(project):
+    for subproject in project.projects:
+        for dirname, dirnames, filenames in os.walk(subproject.path):
             for filename in filenames:            
                 if filename == "TODO":
-                    fqfilename=os.path.join(projects[key], filename)
+                    fqfilename=os.path.join(subproject.path, filename)
+                    #print(fqfilename)
                     with open(fqfilename, 'r') as fin:
                         line = fin.readline()
                         while line:
-                            line = fin.readline()
                             line = line.strip()
                             if line != "":
-                                project.addTask(line)
+                                subproject.addTask(line)
+                                #print("Adding task " + line)
+                            line = fin.readline()
                         fin.close()
-    
-        projectList.append(project)
-    
-def printTaskList(projects, mailsubject):
-    if mailsubject: print("subject: TODO for Chris")
-    for project in projectList:
-        tasks = project.getTasks()
-        if len(tasks) > 0:
-            print("*" + project.name + "*")
-            for task in tasks:
-                print(task)
-            print()
+            break
+        assembleProjectsTasks(subproject)
 
-def printProjectList(projects, mailsubject):
-    if mailsubject: print("subject: Project list for Chris")
-    for project in projectList:
-        print("*" + project.name + "*")
+
+def printProjectList(project, mailsubject, printTasks):
+    if mailsubject: print("subject: " +  subjectLineProjectList)
+    for subproject in project.getProjects():
+        printProject(subproject, 0, printTasks)
+        
+def printProject(project, indent, printTasks):
+    indentString = ' ' * (indentAtom) * (indent)
+    print(indentString + "*" + project.name + "*")
+    if printTasks:
+        tasks = project.getTasks()
+        if len(tasks) > 0:  
+            indentString = ' ' * (indentAtom) * (indent + 1 )
+            for task in tasks:
+                print(indentString + task)
+        print()
+    for subproject in project.projects:
+        printProject(subproject, indent+1, printTasks)
 
 def main():
     parser = argparse.ArgumentParser(description='Report various TODO list aspects')
@@ -82,16 +113,23 @@ def main():
     parser.add_argument('-m', '--mailsubject', action='store_true', help='Add a mail subject line')
     
     args = parser.parse_args()
+    rootProject = Project(rootProjectName, todoDir)
+    
+    if len(sys.argv) < 2:
+        parser.print_help()
+        sys.exit(1)
+    
     if args.mailsubject == 'none': 
             args.mailsubject == False
     
-    scanProjectDirs(todoDir)
-    assembleProjectsTasks(projects)
+    #listFiles(todoDir)
+    scanProjectDirs(rootProject)
+    assembleProjectsTasks(rootProject)
     if args.tasks:
-        printTaskList(projects, args.mailsubject)
+        printProjectList(rootProject, args.mailsubject, True)
         
     if args.projects:
-        printProjectList(projects, args.mailsubject)
+        printProjectList(rootProject, args.mailsubject, False)
     
 main()
 
