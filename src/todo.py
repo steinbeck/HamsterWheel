@@ -3,6 +3,9 @@ import os
 import argparse
 import sys
 
+
+exclDirs= list()
+
 #
 # Adjust these variables to fit your needs or preferences 
 #
@@ -12,12 +15,10 @@ subjectLineTaskList = "Task list for Christoph" # If you mail this list to yours
 subjectLineProjectList = "Project list for Christoph" # If you mail this list to yourself, this will be the subject line. 
 indentAtom = 4 # names of subproject are indented by multiples of indentAtom in the project list 
 
-
-exclDirs= list()
-exclDirs.append("ZZ-COMPLETED")
-exclDirs.append("ZZ-WAITINGFOR")
-exclDirs.append("ZZ-SOMEDAYMAYBE")
-exclDirs.append("Materials")
+exclDirs.append("ZZ-COMPLETED") # The directory where you move completed projects. Will not be traversed for active projects and tasks
+exclDirs.append("ZZ-WAITINGFOR") # The directory where you move projects that you are waiting for. Will not be traversed for active projects and tasks
+exclDirs.append("ZZ-SOMEDAYMAYBE") #  The directory where you move projects that you will not work on in the foreseeable future. Will not be traversed for active projects and tasks
+exclDirs.append("Materials") # The directory in each project where you keep supporting materials (documents, etc) for a project.  # The directory where you move projects that you are waiting for. Will not be traversed for active projects and tasks
 
 projects = {}
 projectList = list()
