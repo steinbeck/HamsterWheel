@@ -26,4 +26,8 @@ optional arguments:
  ## Trivia
  If you are interested in helping to develop HamsterWheel further, please contact me or just get going and push your improvements. 
  For GTD, many things are missing, such as Context.
+ 
+ ## TODO
+ * Add feature to add and remove (including declaring 'done') tasks
+ * Add feature to add and remove projects
 
