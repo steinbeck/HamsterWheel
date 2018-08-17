@@ -13,7 +13,7 @@ todoDir="/Users/steinbeck/Dropbox/Documents/Projects"   # the topmost directory 
 rootProjectName="Christoph's projects"  # The name of the entirety of your projects. Your topmost superproject, if you wish. Holds all other projects.
 subjectLineTaskList = "Task list for Christoph" # If you mail this list to yourself, this will be the subject line. 
 subjectLineProjectList = "Project list for Christoph" # If you mail this list to yourself, this will be the subject line. 
-indentAtom = 4 # names of subproject are indented by multiples of indentAtom in the project list 
+indentAtom = "    " # names of subproject are indented by multiples of indentAtom in the project list 
 
 exclDirs.append("ZZ-COMPLETED") # The directory where you move completed projects. Will not be traversed for active projects and tasks
 exclDirs.append("ZZ-WAITINGFOR") # The directory where you move projects that you are waiting for. Will not be traversed for active projects and tasks
@@ -90,17 +90,20 @@ def assembleProjectsTasks(project):
 
 
 def printProjectList(project, mailsubject, printTasks):
-    if mailsubject: print("subject: " +  subjectLineProjectList)
+    if mailsubject:
+        if printTasks: print("subject: " +  subjectLineProjectList)
+        else: print("subject: " +  subjectLineTaskList)
+    
     for subproject in project.getProjects():
         printProject(subproject, 0, printTasks)
         
 def printProject(project, indent, printTasks):
-    indentString = ' ' * (indentAtom) * (indent)
+    indentString = indentAtom * indent
     print(indentString + "*" + project.name + "*")
     if printTasks:
         tasks = project.getTasks()
         if len(tasks) > 0:  
-            indentString = ' ' * (indentAtom) * (indent + 1 )
+            indentString = indentAtom * (indent + 1 )
             for task in tasks:
                 print(indentString + task)
         print()
