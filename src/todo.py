@@ -91,22 +91,25 @@ def assembleProjectsTasks(project):
 
 def printProjectList(project, mailsubject, printTasks):
     if mailsubject:
-        if printTasks: print("subject: " +  subjectLineProjectList)
-        else: print("subject: " +  subjectLineTaskList)
+        if printTasks: print("subject: " +  subjectLineTaskList)
+        else: print("subject: " +  subjectLineProjectList)
     
     for subproject in project.getProjects():
         printProject(subproject, 0, printTasks)
         
 def printProject(project, indent, printTasks):
     indentString = indentAtom * indent
-    print(indentString + "*" + project.name + "*")
+    tasks = project.getTasks()
+    if (printTasks and len(tasks) > 0) or not printTasks:
+        print(indentString + "*" + project.name + "*")
+    else: 
+        return
     if printTasks:
-        tasks = project.getTasks()
         if len(tasks) > 0:  
             indentString = indentAtom * (indent + 1 )
             for task in tasks:
                 print(indentString + task)
-        print()
+    print()
     for subproject in project.projects:
         printProject(subproject, indent+1, printTasks)
 
