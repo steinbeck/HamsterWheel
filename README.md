@@ -8,7 +8,8 @@ A subfolder therein is a subproject. A project folder holds at least one folder 
 well as a file named 'TODO' which holds a list of tasks. 
 
 The script todo.py, HamsterWheel's only file :), walks through the directory tree under $PROJECTS and accepts the directory name as a project name, 
-unless the folder is called "Materials". If it finds a TODO file, it parses its lines into a list of tasks for this folder. 
+unless the folder is called "Materials". If it finds a TODO file, it parses its lines into a list of tasks for this folder.
+If you want to keep a list of tasks that are done, you can precede a line with 'DONE' and a date in the format YYYY-MM-DD. For now, this line is simply ignored.   
 
 ## Usage
 ```
