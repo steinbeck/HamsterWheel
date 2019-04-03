@@ -81,8 +81,9 @@ def assembleProjectsTasks(project):
                         while line:
                             line = line.strip()
                             if line != "":
-                                subproject.addTask(line)
-                                #print("Adding task " + line)
+                                if not line.startswith("DONE"):
+                                    subproject.addTask(line)
+                                    #print("Adding task " + line)
                             line = fin.readline()
                         fin.close()
             break
@@ -97,7 +98,7 @@ def printProjectList(project, mailsubject, printTasks):
     for subproject in project.getProjects():
         printProject(subproject, 0, printTasks)
         
-def printProject(project, indent, printTasks):
+def printProject(project, indent, printTasks):  
     indentString = indentAtom * indent
     tasks = project.getTasks()
     if (printTasks and len(tasks) > 0) or not printTasks:
