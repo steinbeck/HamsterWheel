@@ -4,8 +4,8 @@ HamsterWheel is a python script to help me manage my todo lists.
 I loosly follow the Getting Things Done (GTD) approach as laid out in great detail in the [seminal book by David Allen](https://en.wikipedia.org/wiki/Getting_Things_Done).
 Having tried many, also commercial GDT apps, I wasn't satisfied with any of them, mostly because of a disjunction of projects and project material. 
 The HamsterWheel approach uses the computer file system to organise projects. A folder under your $PROJECTS folder constitutes a project.
-A subfolder therein is a subproject. A project folder holds at least one folder named 'Materials' which can have an abitrary collection of stuff, as
-well as a file named 'TODO' which holds a list of tasks. 
+A subfolder therein is a subproject. A project folder contains exactly on file named 'TODO', which holds a list of tasks. 
+It can also contain a folder named 'Materials', which can have an arbitrary collection of materials related to the project, such as PDFs with reading material.
 
 The script todo.py, HamsterWheel's only file :), walks through the directory tree under $PROJECTS and accepts the directory name as a project name, 
 unless the folder is called "Materials". If it finds a TODO file, it parses its lines into a list of tasks for this folder.
