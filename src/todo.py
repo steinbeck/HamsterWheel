@@ -97,6 +97,7 @@ def printProjectList(project, mailsubject, printTasks):
     
     for subproject in project.getProjects():
         printProject(subproject, 0, printTasks)
+        printProjectList(subproject, mailsubject, printTasks)
         
 def printProject(project, indent, printTasks):  
     indentString = indentAtom * indent
